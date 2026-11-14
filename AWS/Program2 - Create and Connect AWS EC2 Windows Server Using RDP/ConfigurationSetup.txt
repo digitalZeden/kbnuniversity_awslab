@@ -1,0 +1,19 @@
+#AWS Login for student/ Faculty 
+
+Step1: https://d-c3676e6fd8.awsapps.com/start/
+
+Step2:  Create the instance for windows Image provide the name of instance 
+
+Step3:  Select Microsoft Windows server 2022 base
+
+Step4: Create & Copy the downloaded .pem file in D:\KBNUniversity\Program2\student001.pem
+
+Step6 : Open the created instance and copy the Public IPv4 address 
+
+Step7 : Click on Connect -> Select RDP (Remote Desktop Protocol) Tab Copy username "Administrator" and click on Get Windows password
+
+Step8 : In Get Windows password window --> Upload .pem from D:\KBNUniversity\Program2\student001.pem and click on Decrypt password---> Copy the new password 
+
+Step9: from you local machine search "remote desktop connection" -> enter your IP address -> click on connect -> enter your password
+
+Step10: you will be able to access you remote virtual machine Windows 2022 server base.
