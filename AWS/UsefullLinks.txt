@@ -1,5 +1,8 @@
 #Git Hub Repo for AWS Lap programs 
-https://github.com/tabrezhere/KBNUniversity/tree/main/AWS
+https://github.com/digitalZeden/kbnuniversity_awslab/edit/main/AWS
+
+#One Drive with All program Video and Steps
+https://zedentech0-my.sharepoint.com/:f:/g/personal/info_zedentech_com/IgConw2kWtYDTaVjWz8z7H5qAY41hJFQq68am35umpDVZ7U?e=lVmf0i
 
 #AWS Login for student/ Faculty 
 https://d-c3676e6fd8.awsapps.com/start/
