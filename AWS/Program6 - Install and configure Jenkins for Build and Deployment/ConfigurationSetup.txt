@@ -1,1 +1,92 @@
+#AWS Login for student/ Faculty 
+
+Step1: https://d-c3676e6fd8.awsapps.com/start/
+
+Step2 :Get Public IP and user credential and connect to Remote Desktop using RDP 
+
+Step3 : Download Java: https://adoptium.net/temurin/releases/ and install with all default options
+        Download Jenkins: https://www.jenkins.io/download/ and install with local default options
+
+Step4 : Verify Java installation
+        java -version
+        javac -version
+
+Step5 : Verify Jenkins installation
+        Press Win + R.
+        Type services.msc.
+        Find Jenkins.
+        Right-click → Restart.
+
+Step6 : Open Jenkins
+Open Chrome and navigate to:  http://localhost:8080
+
+Step7: Create your first Java application pipeline
+From the Jenkins dashboard:
+1. Click New Item.
+2. Enter the project name: Java-HelloWorld.
+3. Select Pipeline.
+4. Click OK.
+
+Step 8: Configure the Pipeline
+Scroll down to the Pipeline section.
+Select:
+- Definition: Pipeline script
+- Script: Paste the following code. 
+
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Create Java Application') {
+            steps {
+                echo 'Creating Java Hello World Application'
+
+                writeFile file: 'HelloWorld.java',
+                text: '''
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+        System.out.println("Welcome to Jenkins CI/CD!");
+    }
+}
+'''
+            }
+        }
+
+        stage('Compile Java') {
+            steps {
+                echo 'Compiling Java Application'
+                bat 'javac HelloWorld.java'
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                echo 'Executing Java Application'
+                bat 'java HelloWorld'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Application executed successfully!'
+        }
+
+        failure {
+            echo 'Build failed. Please check the console output.'
+        }
+    }
+}
+
+
+Step 9: Execute the application
+1. Open your Java-HelloWorld project.
+2. Click Build Now.
+3. Jenkins will execute all three stages.
+
+Step 10: Verify the output
+Click the latest build number (for example, #1).
+
 
