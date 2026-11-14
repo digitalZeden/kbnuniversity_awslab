@@ -1,2 +1,57 @@
 #AWS Login for student/ Faculty 
-https://d-c3676e6fd8.awsapps.com/start/
+Step1 : https://d-c3676e6fd8.awsapps.com/start/
+
+Step2 : Create an S3 Bucket
+1. Log in to AWS Management Console.
+2. Search for S3.
+3. Click Create bucket.
+4. Enter a globally unique bucket name.
+
+Step3: Create a Folder Within an S3 Bucket
+1. Open the newly created bucket.
+2. Click Create folder.
+3. Enter folder name (e.g., Documents).
+4. Click Create folder.
+
+Step4: Upload Content to S3
+1. Open the Documents folder.
+2. Click Upload.
+3. Select Add files.
+4. Choose a file from your computer.
+5. Click Upload.
+6. Verify that the file appears in the bucket
+
+Step5: Change Permissions to Allow Public Access
+1. Open the bucket.
+2. Navigate to Permissions.
+3. Locate Block public access.
+4. Edit and disable the required public access blocking settings.
+5. Add an appropriate bucket policy to allow public read access.
+6. Test access using the object's URL.
+
+Step6: Go to-> bucket--> permission
+Add Bucket policy as below
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPublicReadAccess",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::student001bucket/*"
+    }
+  ]
+}
+
+Step6: Delete an S3 Bucket and Its Content
+1. Open the S3 bucket.
+2. Select all objects.
+3. Delete the objects.
+4. Return to the bucket list.
+5. Select the bucket.
+6. Click Delete.
+7. Confirm the bucket deletion. 
+
+
