@@ -42,3 +42,23 @@ git add .
 
 - Adds all new, modified, and deleted files in the current directory to the staging area.
 - Prepares the files for the next commit.
+
+7. Commit the Changes
+git commit -m "Initial Commit"
+
+Saves the staged changes in the local Git repository with a descriptive message.
+
+8.Create and switch to a new branch in one command:
+git checkout -b student001branch
+
+9. Push the New Branch to GitHub
+git push -u origin student001branch
+
+- Uploads the student001 branch to GitHub.
+- -u links the local branch with the remote branch for future pushes.
+
+10.Verify Branch
+git branch
+
+Displays all local branches. The * indicates the currently active branch.
+
