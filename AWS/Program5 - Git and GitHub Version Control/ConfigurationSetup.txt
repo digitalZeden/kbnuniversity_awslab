@@ -6,3 +6,37 @@ Step2: Download & Install the Git from https://git-scm.com/install/windows
 
 Step3: Check git installation 
 git --version
+
+Step4 :Git Commands – Step-by-Step Explanation
+1. Initialize Git Repository
+git init
+
+- Initializes a new Git repository in the current folder.
+- Creates a hidden .git folder to track version history.
+
+2. Configure Username
+git config user.name "student001"
+
+- Sets the username for Git commits.
+- This name will appear as the author of commits.
+3. Configure Email
+git config user.email "student001@gmail.com"
+
+- Sets the email address associated with Git commits.
+- Helps identify the commit author.
+
+4. Add Remote Repository
+git remote add origin https://github.com/digitalZeden/KBNU_GITLAB.git
+
+- Connects your local Git repository to a remote GitHub repository.
+- origin is the default name given to the remote repository.
+5. Update Remote Repository URL
+git remote set-url origin https://github.com/digitalZeden/KBNU_GITLAB.git
+
+- Updates the URL of the existing remote repository named origin.
+- Useful when you need to change the connected GitHub repository URL.
+6. Add Files to Staging Area
+git add .
+
+- Adds all new, modified, and deleted files in the current directory to the staging area.
+- Prepares the files for the next commit.
