@@ -1,3 +1,8 @@
 #AWS Login for student/ Faculty 
 
 Step1: https://github.com/digitalZeden/KBNU_GITLAB
+
+Step2: Download & Install the Git from https://git-scm.com/install/windows
+
+Step3: Check git installation 
+git --version
