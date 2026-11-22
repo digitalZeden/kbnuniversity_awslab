@@ -1,1 +1,10 @@
 
+Step1 : open the file AWS-ERW.txt and copy the content
+
+Step2 :  nano program08.sh
+
+step3: : paste the content and Ctrl+ O HIT ENTER ctrl+X
+
+Step4 : chmod +x program08.sh
+
+Step5 : ./program08.sh <Reponame> <Aws access key>  <aws secret key>
