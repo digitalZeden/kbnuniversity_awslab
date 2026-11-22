@@ -1,0 +1,1 @@
+Learn how to create a Docker image from a sample application using a Dockerfile, build and manage Docker images, create an Amazon Elastic Container Registry (ECR) repository, authenticate Docker with AWS ECR, and push the Docker image to the ECR repository for secure storage and future deployment.
