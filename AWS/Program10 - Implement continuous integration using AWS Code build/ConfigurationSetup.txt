@@ -5,3 +5,26 @@ AWS Access Key ID [None]: <AWS Access Key>
 AWS Secret Access Key [None]: <AWS Secret Key>
 Default region name [None]: eu-north-1
 Default output format [None]: json
+
+Step3: #AWS Login for student/ Faculty 
+https://d-c3676e6fd8.awsapps.com/start/
+
+Step4: Search Codebuild
+       CodeBuild / Build projects / Create Project 
+       project name : Student005-Codebuild
+       Source 1 - Primary : AWS CodeCommit
+       Repository : Yourrepository
+       branch : master
+       Build commands : echo "hello world" ---- > Create build Project 
+
+Step 5: Open Git bash
+     $ cd /d/KBNUniversity/Program10
+     $./create-autobuild-trigger.sh StudentXXX-Repository StudentXXX-Codebuild master eu-north-1
+
+Step 6: Update the file in StudentXXX-Repository--> master branch and check the auto build trigger
+
+       
+      
+     
+
+
