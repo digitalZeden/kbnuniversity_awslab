@@ -9,26 +9,29 @@ sudo apt upgrade -y
 # Step 3: Start Docker service
 sudo systemctl start docker
 
-# Step 4: Enable Docker at system startup
+#Step 4: Install Docker Service
+sudo apt install docker.io -y
+
+# Step 5: Enable Docker at system startup
 sudo systemctl enable docker
 
-# Step 5: Check Docker version
+# Step 6: Check Docker version
 docker --version
 
-# Step 6: Check Docker service status
+# Step 7: Check Docker service status
 sudo systemctl status docker
 
-# Step 7: Add Ubuntu user to Docker group
+# Step 8: Add Ubuntu user to Docker group
 sudo usermod -aG docker ubuntu
 
-# Step 8: Refresh group membership
+# Step 9: Refresh group membership
 newgrp docker
 
-# Step 9: Test Docker installation
+# Step 10: Test Docker installation
 docker run hello-world
 
-# Step 10: List Docker images
+# Step 11: List Docker images
 docker images
 
-# Step 11: List all Docker containers
+# Step 12: List all Docker containers
 docker ps -a
