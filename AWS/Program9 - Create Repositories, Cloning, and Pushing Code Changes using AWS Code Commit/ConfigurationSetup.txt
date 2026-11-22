@@ -11,8 +11,20 @@ Configure AWS skills and the AWS MCP server for your AI coding agent(s)? [y/n/ne
 
 Step 6:  git config --global credential.helper "!aws codecommit credential-helper $@"
 Step 7:  git config --global credential.UseHttpPath true
-Step 8: aws codecommit create-repository --repository-name Student001-Repository --region eu-north-1
+
+Step 8: Create folder D:\KBNUniversity\Program9
+Step 9 :  cd D:\KBNUniversity\Program9\Student001-Repository\
+Step 10 : aws codecommit create-repository --repository-name Student001-Repository --region eu-north-1
+
 Clone Repo
-Step 9: git clone https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/Student001-Repository
+Step 11 : git clone https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/Student001-Repository
         User ID and Password get from below link
 https://zedentech0-my.sharepoint.com/personal/info_zedentech_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Finfo%5Fzedentech%5Fcom%2FDocuments%2FProjects%2FKBN%20University%2FAWS%20LAB%2FProgram9%20%2D%20Repositories%2C%20Cloning%2C%20and%20Pushing%20Code%20Changes%20using%20AWS%20Code%20Commit&viewid=22637252%2D8949%2D4d74%2Da917%2D8f410bfdda81&ga=1
+
+Step12 :  echo "My First AWS CodeCommit Project" >Readme.md
+Step13 :  git add .
+Step14 :  git commit -m "First Commit"
+Step15 :  git push origin master
+
+
+
