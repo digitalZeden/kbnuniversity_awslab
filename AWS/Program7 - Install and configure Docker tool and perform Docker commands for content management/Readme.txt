@@ -1,1 +1,1 @@
-
+This program focuses on installing and configuring Docker on an AWS EC2 virtual machine. Students will learn Docker fundamentals and execute basic Docker commands to download and manage images, create and manage containers, start and stop containers, and perform file and folder operations inside containers. They will also learn to build custom Docker images and manage Docker resources
