@@ -1,0 +1,168 @@
+#!/bin/bash
+set -euo pipefail
+
+# ==========================================
+# AWS ECR DOCKER AUTOMATION
+# Region: eu-north-1
+# ==========================================
+
+# Validate parameters
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <repository-name> <access-key> <secret-key>"
+    exit 1
+fi
+
+REPOSITORY_NAME="$1"
+AWS_ACCESS_KEY_ID="$2"
+AWS_SECRET_ACCESS_KEY="$3"
+
+AWS_REGION="eu-north-1"
+IMAGE_TAG="v1"
+PROJECT_DIR="$HOME/docker-ecr-lab"
+
+# Export AWS credentials for this script only
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_DEFAULT_REGION="$AWS_REGION"
+
+echo "======================================"
+echo " STEP 1: Install Docker and AWS CLI"
+echo "======================================"
+
+sudo apt-get update -y
+sudo apt-get install -y docker.io curl unzip
+
+sudo systemctl enable --now docker
+
+if ! command -v aws >/dev/null 2>&1; then
+    TMP_DIR=$(mktemp -d)
+    cd "$TMP_DIR"
+
+    ARCH=$(uname -m)
+
+    curl -fsSL \
+      "https://awscli.amazonaws.com/awscli-exe-linux-${ARCH}.zip" \
+      -o awscliv2.zip
+
+    unzip -q awscliv2.zip
+    sudo ./aws/install
+
+    cd /
+    rm -rf "$TMP_DIR"
+fi
+
+docker --version
+aws --version
+
+echo "======================================"
+echo " STEP 2: Verify AWS Credentials"
+echo "======================================"
+
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity \
+    --query Account --output text)
+
+echo "AWS Account ID: $AWS_ACCOUNT_ID"
+
+ECR_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+IMAGE_URI="${ECR_URI}/${REPOSITORY_NAME}:${IMAGE_TAG}"
+
+echo "======================================"
+echo " STEP 3: Create Sample Web Application"
+echo "======================================"
+
+mkdir -p "$PROJECT_DIR"
+cd "$PROJECT_DIR"
+
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AWS Docker ECR Lab</title>
+</head>
+<body>
+    <h1>Welcome to AWS DevOps Lab</h1>
+    <h2>Docker Image Created Successfully!</h2>
+    <p>Application running inside Docker.</p>
+</body>
+</html>
+EOF
+
+echo "======================================"
+echo " STEP 4: Create Dockerfile"
+echo "======================================"
+
+cat > Dockerfile <<'EOF'
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80
+EOF
+
+echo "======================================"
+echo " STEP 5: Build Docker Image"
+echo "======================================"
+
+sudo docker build -t "${REPOSITORY_NAME}:${IMAGE_TAG}" .
+
+echo "======================================"
+echo " STEP 6: Check Docker Images"
+echo "======================================"
+
+sudo docker images
+
+echo "======================================"
+echo " STEP 7: Create ECR Repository"
+echo "======================================"
+
+if aws ecr describe-repositories \
+    --repository-names "$REPOSITORY_NAME" \
+    --region "$AWS_REGION" >/dev/null 2>&1; then
+
+    echo "Repository already exists."
+
+else
+    aws ecr create-repository \
+        --repository-name "$REPOSITORY_NAME" \
+        --region "$AWS_REGION"
+fi
+
+echo "======================================"
+echo " STEP 8: Login to AWS ECR"
+echo "======================================"
+
+aws ecr get-login-password \
+    --region "$AWS_REGION" |
+sudo docker login \
+    --username AWS \
+    --password-stdin "$ECR_URI"
+
+echo "======================================"
+echo " STEP 9: Tag Docker Image"
+echo "======================================"
+
+sudo docker tag \
+    "${REPOSITORY_NAME}:${IMAGE_TAG}" \
+    "$IMAGE_URI"
+
+echo "======================================"
+echo " STEP 10: Push Image to AWS ECR"
+echo "======================================"
+
+sudo docker push "$IMAGE_URI"
+
+echo "======================================"
+echo " STEP 11: Verify Image in ECR"
+echo "======================================"
+
+aws ecr describe-images \
+    --repository-name "$REPOSITORY_NAME" \
+    --image-ids imageTag="$IMAGE_TAG" \
+    --region "$AWS_REGION"
+
+echo "======================================"
+echo " SUCCESS: IMAGE PUSHED TO AWS ECR"
+echo "======================================"
+
+echo "Region     : $AWS_REGION"
+echo "Repository : $REPOSITORY_NAME"
+echo "Image Tag  : $IMAGE_TAG"
+echo "Image URI  : $IMAGE_URI"
