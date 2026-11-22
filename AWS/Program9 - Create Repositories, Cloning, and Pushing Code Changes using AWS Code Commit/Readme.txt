@@ -1,0 +1,1 @@
+Create a Git repository in AWS CodeCommit, clone the repository to a local machine, configure Git, add and modify source code files, commit changes, and push the updated code to the remote repository. Understand basic Git operations and source code version control using AWS CodeCommit.
