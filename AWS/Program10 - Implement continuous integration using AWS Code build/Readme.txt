@@ -1,0 +1,1 @@
+Create an AWS CodeBuild project integrated with AWS CodeCommit to automate the build process. Configure build environments, source repositories, build specifications (buildspec.yml), and EventBridge triggers to automatically start builds whenever code changes are committed to the specified Git branch. Monitor build execution, review logs, and troubleshoot build failures.
