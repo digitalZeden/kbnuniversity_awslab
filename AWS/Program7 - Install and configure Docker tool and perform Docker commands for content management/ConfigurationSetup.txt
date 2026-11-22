@@ -1,0 +1,34 @@
+Execute Program 1 then follow the below comments (AWS EC2 Linux instance and Connect using SSH)
+
+# Step 1: Update package information
+sudo apt update
+
+# Step 2: Upgrade installed packages
+sudo apt upgrade -y
+
+# Step 3: Start Docker service
+sudo systemctl start docker
+
+# Step 4: Enable Docker at system startup
+sudo systemctl enable docker
+
+# Step 5: Check Docker version
+docker --version
+
+# Step 6: Check Docker service status
+sudo systemctl status docker
+
+# Step 7: Add Ubuntu user to Docker group
+sudo usermod -aG docker ubuntu
+
+# Step 8: Refresh group membership
+newgrp docker
+
+# Step 9: Test Docker installation
+docker run hello-world
+
+# Step 10: List Docker images
+docker images
+
+# Step 11: List all Docker containers
+docker ps -a
