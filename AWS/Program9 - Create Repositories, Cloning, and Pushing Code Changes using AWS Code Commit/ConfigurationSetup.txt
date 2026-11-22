@@ -1,1 +1,18 @@
+Step 1 : down load Git and install : https://git-scm.com/install/windows
+Step 2 : Downlaod AWS CLI and Install : https://awscli.amazonaws.com/AWSCLIV2.msi
+Step 3 : git --version
+Step 4 :  aws --version
+Step 5 :  aws configure
+AWS Access Key ID [None]: <AWS Access Key>
+AWS Secret Access Key [None]: <AWS Secret Key>
+Default region name [None]: eu-north-1
+Default output format [None]: json
+Configure AWS skills and the AWS MCP server for your AI coding agent(s)? [y/n/never]: n
 
+Step 6:  git config --global credential.helper "!aws codecommit credential-helper $@"
+Step 7:  git config --global credential.UseHttpPath true
+Step 8: aws codecommit create-repository --repository-name Student001-Repository --region eu-north-1
+Clone Repo
+Step 9: git clone https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/Student001-Repository
+        User ID and Password get from below link
+https://zedentech0-my.sharepoint.com/personal/info_zedentech_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Finfo%5Fzedentech%5Fcom%2FDocuments%2FProjects%2FKBN%20University%2FAWS%20LAB%2FProgram9%20%2D%20Repositories%2C%20Cloning%2C%20and%20Pushing%20Code%20Changes%20using%20AWS%20Code%20Commit&viewid=22637252%2D8949%2D4d74%2Da917%2D8f410bfdda81&ga=1
