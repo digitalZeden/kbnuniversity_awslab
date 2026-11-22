@@ -1,1 +1,7 @@
-Step 1: Download 
+Step 1: Download create-autobuild-trigger.sh in D:\KBNUniversity\Program10
+
+Step2 : aws configure
+AWS Access Key ID [None]: <AWS Access Key>
+AWS Secret Access Key [None]: <AWS Secret Key>
+Default region name [None]: eu-north-1
+Default output format [None]: json
