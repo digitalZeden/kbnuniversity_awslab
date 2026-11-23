@@ -1,0 +1,244 @@
+
+#!/bin/bash
+
+set -e
+
+# ==========================================
+# PROGRAM 11 - AWS CODEDEPLOY
+# AUTOMATIC HTML APPLICATION DEPLOYMENT
+# ==========================================
+
+REGION="eu-north-1"
+BUCKET="program11-html-deployment"
+
+APP_NAME="HTMLDemoApp"
+DEPLOYMENT_GROUP="HTMLDemoDeploymentGroup"
+
+# Correct CodeDeploy Service Role ARN
+CODEDEPLOY_ROLE_ARN="arn:aws:iam::458755676574:role/Program11-CodeDeploy-ServiceRole"
+
+APP_DIR="/home/ubuntu/HTMLDemo"
+ZIP_FILE="/home/ubuntu/HTMLDemo.zip"
+
+echo "======================================"
+echo " PROGRAM 11 - AWS CODEDEPLOY"
+echo "======================================"
+
+# STEP 1: Install required packages
+
+echo "Step 1: Installing required packages..."
+
+sudo apt update -y
+sudo apt install -y nginx wget zip awscli
+
+# STEP 2: Start Nginx
+
+echo "Step 2: Starting Nginx..."
+
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+# STEP 3: Install CodeDeploy Agent V2
+
+echo "Step 3: Checking CodeDeploy Agent..."
+
+if ! systemctl is-active --quiet codedeploy-agent; then
+
+    cd /home/ubuntu
+
+    wget -q -O install \
+    "https://aws-codedeploy-${REGION}.s3.${REGION}.amazonaws.com/latestv2/install"
+
+    chmod +x install
+
+    sudo ./install auto
+
+    sudo systemctl enable codedeploy-agent
+    sudo systemctl start codedeploy-agent
+
+fi
+
+echo "CodeDeploy Agent is ready."
+
+# STEP 4: Verify AWS IAM identity
+
+echo "Step 4: Checking AWS IAM role..."
+
+aws sts get-caller-identity --region "$REGION"
+
+# STEP 5: Create S3 bucket if not exists
+
+echo "Step 5: Checking S3 bucket..."
+
+if aws s3api head-bucket \
+    --bucket "$BUCKET" \
+    --region "$REGION" 2>/dev/null; then
+
+    echo "S3 bucket already exists: $BUCKET"
+
+else
+
+    echo "S3 bucket does not exist. Creating..."
+
+    aws s3api create-bucket \
+        --bucket "$BUCKET" \
+        --region "$REGION" \
+        --create-bucket-configuration LocationConstraint="$REGION"
+
+    echo "S3 bucket created successfully."
+
+fi
+
+# STEP 6: Check and create CodeDeploy application
+
+echo "Step 6: Checking CodeDeploy application..."
+
+APP_LIST=$(aws deploy list-applications \
+    --region "$REGION" \
+    --query 'applications[]' \
+    --output text)
+
+if printf '%s\n' "$APP_LIST" | tr '\t' '\n' | grep -Fxq "$APP_NAME"; then
+
+    echo "Application already exists: $APP_NAME"
+    echo "Skipping application creation."
+
+else
+
+    echo "Application does not exist. Creating..."
+
+    aws deploy create-application \
+        --application-name "$APP_NAME" \
+        --compute-platform Server \
+        --region "$REGION"
+
+    echo "CodeDeploy application created successfully."
+
+fi
+
+# STEP 7: Check and create deployment group
+
+echo "Step 7: Checking deployment group..."
+
+DG_LIST=$(aws deploy list-deployment-groups \
+    --application-name "$APP_NAME" \
+    --region "$REGION" \
+    --query 'deploymentGroups[]' \
+    --output text)
+
+if printf '%s\n' "$DG_LIST" | tr '\t' '\n' | grep -Fxq "$DEPLOYMENT_GROUP"; then
+
+    echo "Deployment group already exists: $DEPLOYMENT_GROUP"
+    echo "Skipping deployment group creation."
+
+else
+
+    echo "Deployment group does not exist. Creating..."
+
+    aws deploy create-deployment-group \
+        --application-name "$APP_NAME" \
+        --deployment-group-name "$DEPLOYMENT_GROUP" \
+        --service-role-arn "$CODEDEPLOY_ROLE_ARN" \
+        --deployment-config-name CodeDeployDefault.AllAtOnce \
+        --deployment-style deploymentType=IN_PLACE,deploymentOption=WITHOUT_TRAFFIC_CONTROL \
+        --ec2-tag-filters Key=Name,Value=Program11-EC2,Type=KEY_AND_VALUE \
+        --region "$REGION"
+
+    echo "Deployment group created successfully."
+
+fi
+
+# STEP 8: Create HTML application
+
+echo "Step 8: Creating HTML application..."
+
+mkdir -p "$APP_DIR"
+
+cat > "$APP_DIR/index.html" <<'HTML'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Program 11 - CodeDeploy</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f0f4f8;
+            padding: 100px;
+        }
+
+        h1 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello from AWS CodeDeploy!</h1>
+    <h2>Program 11: Automated Deployment</h2>
+    <p>Successfully deployed using AWS CodeDeploy.</p>
+</body>
+</html>
+HTML
+
+# STEP 9: Create appspec.yml
+
+echo "Step 9: Creating appspec.yml..."
+
+cat > "$APP_DIR/appspec.yml" <<'YAML'
+version: 0.0
+os: linux
+
+files:
+  - source: index.html
+    destination: /var/www/html
+YAML
+
+# STEP 10: Create ZIP package
+
+echo "Step 10: Creating deployment ZIP..."
+
+cd "$APP_DIR"
+
+rm -f "$ZIP_FILE"
+
+zip -q -j "$ZIP_FILE" index.html appspec.yml
+
+# STEP 11: Upload ZIP to S3
+
+echo "Step 11: Uploading application to S3..."
+
+aws s3 cp "$ZIP_FILE" \
+    "s3://${BUCKET}/HTMLDemo.zip" \
+    --region "$REGION"
+
+echo "Application uploaded successfully."
+
+# STEP 12: Start CodeDeploy deployment
+
+echo "Step 12: Starting CodeDeploy deployment..."
+
+DEPLOYMENT_ID=$(aws deploy create-deployment \
+    --application-name "$APP_NAME" \
+    --deployment-group-name "$DEPLOYMENT_GROUP" \
+    --s3-location bucket="$BUCKET",key=HTMLDemo.zip,bundleType=zip \
+    --description "Program 11 HTML Deployment" \
+    --region "$REGION" \
+    --query 'deploymentId' \
+    --output text)
+
+echo "Deployment ID: $DEPLOYMENT_ID"
+
+# STEP 13: Wait for deployment
+
+echo "Step 13: Waiting for deployment..."
+
+aws deploy wait deployment-successful \
+    --deployment-id "$DEPLOYMENT_ID" \
+    --region "$REGION"
+
+echo "======================================"
+echo " DEPLOYMENT SUCCESSFUL!"
+echo "======================================"
+
+echo "HTML application deployed successfully."
+echo "Open your EC2 public IP in the browser."
