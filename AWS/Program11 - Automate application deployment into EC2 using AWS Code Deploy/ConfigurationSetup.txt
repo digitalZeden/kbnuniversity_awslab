@@ -1,1 +1,23 @@
-Execute Program 1 then follow the below comments (AWS EC2 Linux instance and Connect using SSH)
+
+
+Step 1: Create EC2 Instance
+- Launch a new EC2 instance.
+- Add the tag Name = Program11-EC2.
+- Configure the inbound security group rule to allow HTTP (TCP, Port 80) from Anywhere-IPv4.
+- Save and launch the instance.
+(Execute Program 1 then follow the below comments (AWS EC2 Linux instance and Connect using SSH))
+
+Step 2: Create Deployment Script
+- Connect to the EC2 instance using EC2 Instance Connect.
+- Execute nano program11.sh.
+- Copy and paste the content from AWS-Prog11.txt.
+- Save and exit.
+
+Step 3: Execute Deployment Script
+- Run chmod +x program11.sh to provide execution permission.
+- Run sudo ./program11.sh to execute the deployment script.
+
+Step 4: Verify Application Deployment
+- Copy the EC2 instance's Public IPv4 address.
+- Open a web browser and access http://<Your-Public-IP>.
+- Verify that the deployed application is displayed successfully.
